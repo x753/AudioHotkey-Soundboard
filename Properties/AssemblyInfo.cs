@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JN Soundboard")]
+[assembly: AssemblyTitle("AudioHotkey Soundboard")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JN Soundboard")]
-[assembly: AssemblyCopyright("Copyright © Jitnaught 2017")]
+[assembly: AssemblyProduct("AudioHotkey Soundboard")]
+[assembly: AssemblyCopyright("Copyright © 753 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

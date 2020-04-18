@@ -1,15 +1,17 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     public class XMLSettings
     {
-        readonly static SoundboardSettings DEFAULT_SOUNDBOARD_SETTINGS = new SoundboardSettings(new Keys[] { }, new LoadXMLFile[] { new LoadXMLFile(new Keys[] { }, "") }, true, "", "");
+        readonly static SoundboardSettings DEFAULT_SOUNDBOARD_SETTINGS = new SoundboardSettings(new Keys[] { Keys.Pause }, new Keys[] { Keys.Oemtilde, Keys.LControlKey }, new LoadXMLFile[] { new LoadXMLFile(new Keys[] { }, "") }, false, true, "", "", "");
 
         internal static SoundboardSettings soundboardSettings = new SoundboardSettings();
 
@@ -18,16 +20,16 @@ namespace JNSoundboard
         public class SoundHotkey
         {
             public Keys[] Keys;
-            public string WindowTitle;
             public string[] SoundLocations;
+            public string SoundClips;
 
             public SoundHotkey() { }
 
-            public SoundHotkey(Keys[] keys, string windowTitle, string[] soundLocs)
+            public SoundHotkey(Keys[] keys, string[] soundLocs)
             {
                 Keys = keys;
-                WindowTitle = windowTitle;
                 SoundLocations = soundLocs;
+                SoundClips = Helper.fileNamesFromLocations(soundLocs);
             }
         }
 
@@ -63,19 +65,22 @@ namespace JNSoundboard
         [Serializable]
         public class SoundboardSettings
         {
-            public Keys[] StopSoundKeys;
+            public Keys[] StopSoundKeys, PlaySelectionKeys;
             public LoadXMLFile[] LoadXMLFiles;
-            public bool MinimizeToTray;
-            public string LastPlaybackDevice, LastLoopbackDevice;
+            public bool MinimizeToTray, PlaySoundsOverEachOther;
+            public string LastPlaybackDevice, LastPlaybackDevice2, LastLoopbackDevice;
 
             public SoundboardSettings() { }
 
-            public SoundboardSettings(Keys[] stopSoundKeys, LoadXMLFile[] loadXMLFiles, bool minimizeToTray, string lastPlaybackDevice, string lastLoopbackDevice)
+            public SoundboardSettings(Keys[] stopSoundKeys, Keys[] playSelectionKeys, LoadXMLFile[] loadXMLFiles, bool minimizeToTray, bool playSoundsOverEachOther, string lastPlaybackDevice, string lastPlaybackDevice2, string lastLoopbackDevice)
             {
                 StopSoundKeys = stopSoundKeys;
+                PlaySelectionKeys = playSelectionKeys;
                 LoadXMLFiles = loadXMLFiles;
                 MinimizeToTray = minimizeToTray;
+                PlaySoundsOverEachOther = playSoundsOverEachOther;
                 LastPlaybackDevice = lastPlaybackDevice;
+                LastPlaybackDevice2 = lastPlaybackDevice2;
                 LastLoopbackDevice = lastLoopbackDevice;
             }
         }
@@ -157,11 +162,13 @@ namespace JNSoundboard
                     return;
                 }
 
-                if (settings.StopSoundKeys == null) settings.StopSoundKeys = new Keys[] { };
+                if (settings.StopSoundKeys == null) settings.StopSoundKeys = new Keys[] { Keys.Pause };
+                if (settings.PlaySelectionKeys == null) settings.PlaySelectionKeys = new Keys[] { Keys.Oemtilde, Keys.LControlKey };
 
                 if (settings.LoadXMLFiles == null) settings.LoadXMLFiles = new LoadXMLFile[] { };
 
                 if (settings.LastPlaybackDevice == null) settings.LastPlaybackDevice = "";
+                if (settings.LastPlaybackDevice2 == null) settings.LastPlaybackDevice2 = "";
 
                 if (settings.LastLoopbackDevice == null) settings.LastLoopbackDevice = "";
 
@@ -171,6 +178,15 @@ namespace JNSoundboard
             {
                 WriteXML(DEFAULT_SOUNDBOARD_SETTINGS, filePath);
                 soundboardSettings = DEFAULT_SOUNDBOARD_SETTINGS;
+
+                for (int i = 0; i < WaveOut.DeviceCount; i++)
+                {
+                    if (WaveOut.GetCapabilities(i).ProductName.Contains("VB-Cable Input") || WaveOut.GetCapabilities(i).ProductName.Contains("CABLE Input") || WaveOut.GetCapabilities(i).ProductName.Contains("VoiceMeeter Input"))
+                    {
+                        soundboardSettings.LastPlaybackDevice = WaveOut.GetCapabilities(i).ProductName;
+                        WriteXML(soundboardSettings, filePath);
+                    }
+                }
             }
         }
     }

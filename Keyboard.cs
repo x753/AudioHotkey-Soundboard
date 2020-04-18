@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     public class Keyboard
     {

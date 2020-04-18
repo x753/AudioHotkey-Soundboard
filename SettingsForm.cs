@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     public partial class SettingsForm : Form
     {
@@ -28,15 +28,19 @@ namespace JNSoundboard
                     continue;
                 }
 
-                var item = new ListViewItem((keysLengthCorrect ? string.Join("+", loadXMLFilesList[i].Keys) : ""));
-                item.SubItems.Add((xmlLocationUnempty ? loadXMLFilesList[i].XMLLocation : ""));
-
-                lvKeysLocs.Items.Add(item);
+                object[] newRow = new object[2];
+                newRow[0] = Path.GetFileName((xmlLocationUnempty ? loadXMLFilesList[i].XMLLocation : ""));
+                newRow[1] = (keysLengthCorrect ? string.Join("+", loadXMLFilesList[i].Keys) : "");
+                
+                dgvSoundboardFiles.Rows.Add(newRow);
             }
 
             tbStopSoundKeys.Text = Helper.keysToString(XMLSettings.soundboardSettings.StopSoundKeys);
+            tbPlaySelectionKeys.Text = Helper.keysToString(XMLSettings.soundboardSettings.PlaySelectionKeys);
 
             cbMinimizeToTray.Checked = XMLSettings.soundboardSettings.MinimizeToTray;
+
+            cbPlaySoundsOverEachOther.Checked = XMLSettings.soundboardSettings.PlaySoundsOverEachOther;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -51,14 +55,14 @@ namespace JNSoundboard
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (lvKeysLocs.SelectedIndices.Count > 0)
+            if (dgvSoundboardFiles.SelectedRows.Count > 0)
             {
                 addingEditingLoadXMLFile = true;
 
                 var form = new AddEditHotkeyForm();
 
-                form.editIndex = lvKeysLocs.SelectedIndices[0];
-                form.editStrings = new string[] { lvKeysLocs.SelectedItems[0].Text, lvKeysLocs.SelectedItems[0].SubItems[1].Text };
+                form.editIndex = dgvSoundboardFiles.SelectedRows[0].Index;
+                form.editStrings = new string[] { (string) loadXMLFilesList[form.editIndex].XMLLocation, (string) dgvSoundboardFiles.SelectedRows[0].Cells[1].Value };
 
                 form.ShowDialog();
 
@@ -68,11 +72,11 @@ namespace JNSoundboard
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (lvKeysLocs.SelectedIndices.Count > 0 && MessageBox.Show("Are you sure?", "Are you sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (dgvSoundboardFiles.SelectedRows.Count > 0 && MessageBox.Show("Are you sure?", "Are you sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                int index = lvKeysLocs.SelectedIndices[0];
+                int index = dgvSoundboardFiles.SelectedRows[0].Index;
 
-                lvKeysLocs.Items.RemoveAt(index);
+                dgvSoundboardFiles.Rows.RemoveAt(index);
                 loadXMLFilesList.RemoveAt(index);
             }
         }
@@ -80,17 +84,21 @@ namespace JNSoundboard
         private void btnOK_Click(object sender, EventArgs e)
         {
             Keys[] keysArr = null;
+            Keys[] keysArr2 = null;
             string error = "";
 
-            if (string.IsNullOrWhiteSpace(tbStopSoundKeys.Text) || Helper.keysArrayFromString(tbStopSoundKeys.Text, out keysArr, out error))
+            if ((string.IsNullOrWhiteSpace(tbStopSoundKeys.Text) || Helper.keysArrayFromString(tbStopSoundKeys.Text, out keysArr, out error)) && (string.IsNullOrWhiteSpace(tbPlaySelectionKeys.Text) || Helper.keysArrayFromString(tbPlaySelectionKeys.Text, out keysArr2, out error)))
             {
                 if (loadXMLFilesList.Count == 0 || loadXMLFilesList.All(x => x.Keys.Length > 0 && !string.IsNullOrWhiteSpace(x.XMLLocation) && File.Exists(x.XMLLocation)))
                 {
                     XMLSettings.soundboardSettings.StopSoundKeys = (keysArr == null ? new Keys[] { } : keysArr);
+                    XMLSettings.soundboardSettings.PlaySelectionKeys = (keysArr2 == null ? new Keys[] { } : keysArr2);
 
                     XMLSettings.soundboardSettings.LoadXMLFiles = loadXMLFilesList.ToArray();
 
                     XMLSettings.soundboardSettings.MinimizeToTray = cbMinimizeToTray.Checked;
+
+                    XMLSettings.soundboardSettings.PlaySoundsOverEachOther = cbPlaySoundsOverEachOther.Checked;
 
                     XMLSettings.SaveSoundboardSettingsXML();
 
@@ -156,6 +164,59 @@ namespace JNSoundboard
 
                 lastAmountPressed = amountPressed;
             }
+        }
+
+        private void ButtonClear_Click(object sender, EventArgs e)
+        {
+            tbStopSoundKeys.Text = "";
+        }
+
+        private void TbPlaySelectionKeys_Enter(object sender, EventArgs e)
+        {
+            timer2.Enabled = true;
+        }
+
+        private void TbPlaySelectionKeys_Leave(object sender, EventArgs e)
+        {
+            timer2.Enabled = false;
+        }
+
+        int lastAmountPressed2 = 0;
+        private void Timer2_Tick(object sender, EventArgs e)
+        {
+            int amountPressed = 0;
+
+            if (Keyboard.IsKeyDown(Keys.Escape))
+            {
+                lastAmountPressed2 = 50;
+
+                tbPlaySelectionKeys.Text = "";
+            }
+            else
+            {
+                var pressedKeys = new List<Keys>();
+
+                foreach (Keys key in Enum.GetValues(typeof(Keys)))
+                {
+                    if (Keyboard.IsKeyDown(key))
+                    {
+                        amountPressed++;
+                        pressedKeys.Add(key);
+                    }
+                }
+
+                if (amountPressed > lastAmountPressed2)
+                {
+                    tbPlaySelectionKeys.Text = Helper.keysToString(pressedKeys.ToArray());
+                }
+
+                lastAmountPressed2 = amountPressed;
+            }
+        }
+
+        private void ButtonClear2_Click(object sender, EventArgs e)
+        {
+            tbPlaySelectionKeys.Text = "";
         }
     }
 }

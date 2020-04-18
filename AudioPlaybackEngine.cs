@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System.Linq;
+using System.Windows.Forms;
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     class AudioPlaybackEngine : IDisposable
     {
-        public static readonly AudioPlaybackEngine Instance = new AudioPlaybackEngine(44100, 2);
+        public static readonly AudioPlaybackEngine Primary = new AudioPlaybackEngine(44100, 2);
+        public static readonly AudioPlaybackEngine Secondary = new AudioPlaybackEngine(44100, 2);
 
         private IWavePlayer outputDevice;
         private readonly MixingSampleProvider mixer;
-        private IDictionary<string, CachedSound> cachedSounds = new Dictionary<string, CachedSound>();
+        public static IDictionary<string, CachedSound> cachedSounds = new Dictionary<string, CachedSound>();
 
         public AudioPlaybackEngine(int sampleRate = 44100, int channelCount = 2)
         {
@@ -37,8 +39,9 @@ namespace JNSoundboard
         {
             if (outputDevice != null) outputDevice.Dispose();
 
-            var output = new WaveOutEvent();
+            WaveOutEvent output = new WaveOutEvent();
             output.DeviceNumber = deviceNumber;
+
             output.Init(mixer);
             output.Play();
 
@@ -47,7 +50,8 @@ namespace JNSoundboard
 
         public void PlaySound(string fileName)
         {
-            var input = new AudioFileReader(fileName);
+            //AudioFileReader input = new AudioFileReader(fileName);
+            // potentially useless? 
 
             CachedSound cachedSound = null;
 
@@ -72,6 +76,16 @@ namespace JNSoundboard
 
         private ISampleProvider ConvertToRightChannelCount(ISampleProvider input)
         {
+            MainForm mainForm = Application.OpenForms[0] as MainForm;
+
+            float boost = mainForm.GetGain();
+            if (boost != 0f)
+            {
+                var boostedInput = new BoostedSampleProvider(input);
+                boostedInput.boost = mainForm.GetGain();
+                input = boostedInput;
+            }
+
             if (input.WaveFormat.Channels == mixer.WaveFormat.Channels)
             {
                 return input;

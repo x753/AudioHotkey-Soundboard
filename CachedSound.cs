@@ -5,7 +5,7 @@ using NAudio.Wave;
 // https://mark-dot-net.blogspot.de/2014/02/fire-and-forget-audio-playback-with.html
 // Mark Heath 2014
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     class CachedSound
     {

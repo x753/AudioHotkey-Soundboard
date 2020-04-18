@@ -1,37 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace JNSoundboard
+namespace AudioHotkeySoundboard
 {
     class Helper
     {
-        [DllImport("user32.dll")]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-        
-        [DllImport("user32.dll")]
-        internal static extern IntPtr GetForegroundWindow();
-
-        internal static bool isForegroundWindow(string windowTitle)
-        {
-            IntPtr foregroundWindow = GetForegroundWindow();
-
-            return isForegroundWindow(foregroundWindow, windowTitle);
-        }
-
-        internal static bool isForegroundWindow(IntPtr foregroundWindow, string windowTitle)
-        {
-            IntPtr window = FindWindow(null, windowTitle);
-
-            if (window == IntPtr.Zero) return false; //not found
-
-            return foregroundWindow == window;
-        }
-
         internal static string userGetXMLLoc()
         {
             SaveFileDialog diag = new SaveFileDialog();
@@ -143,9 +120,9 @@ namespace JNSoundboard
 
         internal static bool soundLocsArrayFromString(string soundLocsStr, out string[] soundLocs, out string errorMessage)
         {
-            if (soundLocsStr.Contains(";"))
+            if (soundLocsStr.Contains(">"))
             {
-                string[] sLocs = soundLocsStr.Split(';');
+                string[] sLocs = soundLocsStr.Split('>');
                 var lLocs = new List<string>();
 
                 for (int i = 0; i < sLocs.Length; i++)
@@ -190,10 +167,34 @@ namespace JNSoundboard
 
             for (int i = 0; i < sLen; i++)
             {
-                temp += soundLocations[i].ToString() + (i == sLen - 1 ? "" : ";");
+                temp += soundLocations[i].ToString() + (i == sLen - 1 ? "" : ">");
             }
 
             return temp;
+        }
+
+        internal static string fileNamesFromLocations(string locations)
+        {
+            string[] locationsArray = locations.Split(new char[] { '>' });
+            return fileNamesFromLocations(locationsArray);
+        }
+
+        internal static string fileNamesFromLocations(string[] locations)
+        {
+            string result = Path.GetFileName(locations[0]);
+            for (int i = 1; i < locations.Length; i++)
+            {
+                result += "> " + Path.GetFileName(locations[i]);
+            }
+            return result;
+        }
+
+        internal static bool isSupportedFileType(string path)
+        {
+            string extension = Path.GetExtension(path);
+            if (extension == ".mp3" || extension == ".m4a" || extension == ".wav" || extension == ".wma" || extension == ".ac3" || extension == ".aiff" || extension == ".mp2")
+                return true;
+            return false;
         }
 
         internal static string cleanFileName(string fileName)

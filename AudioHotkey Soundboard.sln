@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNSoundboard", "JNSoundboard.csproj", "{791CE5FC-FB35-4471-A28E-B5A5E99E9355}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioHotkey Soundboard", "AudioHotkey Soundboard.csproj", "{791CE5FC-FB35-4471-A28E-B5A5E99E9355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40287A84-C1F6-4088-88E2-4BAAB8FDCDBB}
 	EndGlobalSection
 EndGlobal
