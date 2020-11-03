@@ -746,12 +746,23 @@ namespace AudioHotkeySoundboard
             }
         }
 
+        public static System.Windows.Forms.Timer IdleTimer = new System.Windows.Forms.Timer();
+        public static string TypeTarget = "";
         // Jump to the first sound starting with whatever key you pressed if the DGV is selected
         private void DgvKeySounds_KeyPress(object sender, KeyPressEventArgs e)
         {
+            TypeTarget += Char.ToLower(e.KeyChar);
+
+            IdleTimer.Stop();
+            IdleTimer.Interval = 600;
+            IdleTimer.Tick += TypeTargetTimeDone;
+            IdleTimer.Start();
+
+            Debug.WriteLine(TypeTarget);
+
             for (int i = 0; i < dgvKeySounds.Rows.Count; i++)
             {
-                if (Char.ToLower(dgvKeySounds.Rows[i].Cells[0].Value.ToString()[0]) == Char.ToLower(e.KeyChar))
+                if (dgvKeySounds.Rows[i].Cells[0].Value.ToString().ToLower().StartsWith(TypeTarget))
                 {
                     BindingSource bs = new BindingSource();
                     dgvKeySounds.BindingContext[bs].Position = i;
@@ -760,6 +771,12 @@ namespace AudioHotkeySoundboard
                 }
             }
         }
+        static private void TypeTargetTimeDone(object sender, EventArgs e)
+        {
+            IdleTimer.Stop();
+            TypeTarget = "";
+        }
+
 
         // Button for manually clearing cached sounds and running garbage collection
         private void MemoryManagementToolStripMenuItem_Click(object sender, EventArgs e)
