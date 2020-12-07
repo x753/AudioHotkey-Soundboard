@@ -59,12 +59,6 @@ namespace AudioHotkeySoundboard
                 return;
             }
 
-            if (SettingsForm.addingEditingLoadXMLFile && string.IsNullOrWhiteSpace(tbKeys.Text))
-            {
-                MessageBox.Show("No keys entered");
-                return;
-            }
-
             string[] soundLocs = null;
             string errorMessage = "";
 
@@ -144,6 +138,8 @@ namespace AudioHotkeySoundboard
                 });
             }
 
+            MainForm.Instance.AutoSave();
+
             this.Close();
         }
 
@@ -178,7 +174,7 @@ namespace AudioHotkeySoundboard
                 {
                     if (text.Contains(">"))
                     {
-                        labelLoc.Text = "Location of file (multiple locations mean one will be selected at random on play)";
+                        labelLoc.Text = "Location of file (Multiple selected, a sound will be selected at random each play)";
                     }
                 }
             }

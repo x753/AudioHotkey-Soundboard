@@ -50,6 +50,12 @@ namespace AudioHotkeySoundboard
             mainTimer.Enabled = true;
 
             initAudioPlaybackEngine();
+
+            string filePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\AHS-autosave.xml";
+            if (File.Exists(filePath))
+            {
+                loadXMLFile(filePath);
+            }
         }
 
         private void initAudioPlaybackEngine()
@@ -258,7 +264,6 @@ namespace AudioHotkeySoundboard
             {
                 var items = new List<object[]>();
                 string errors = "";
-                string sameKeys = "";
 
                 for (int i = 0; i < s.SoundHotkeys.Length; i++)
                 {
@@ -295,11 +300,6 @@ namespace AudioHotkeySoundboard
                         MessageBox.Show((errors == "" ? "" : errors));
                     }
 
-                    if (sameKeys != "")
-                    {
-                        MessageBox.Show("Multiple entries using the same keys. The keys being used multiple times are: " + sameKeys);
-                    }
-
                     soundHotkeys.Clear();
                     soundHotkeys.AddRange(s.SoundHotkeys);
 
@@ -314,7 +314,7 @@ namespace AudioHotkeySoundboard
                 else
                 {
                     SystemSounds.Beep.Play();
-                    MessageBox.Show("No entries found, or all entries had errors in them (key being None, sound location behind empty or non-existant)");
+                    MessageBox.Show("No entries found, or all entries had errors in them (sound location behind empty or non-existant)");
                 }
             }
             else
@@ -322,6 +322,8 @@ namespace AudioHotkeySoundboard
                 SystemSounds.Beep.Play();
                 MessageBox.Show("No entries found, or there was an error reading the settings file");
             }
+
+            AutoSave();
         }
 
         private void editSelectedSoundHotkey()
@@ -340,6 +342,8 @@ namespace AudioHotkeySoundboard
 
                 form.ShowDialog();
             }
+
+            AutoSave();
         }
 
         private void loopbackSourceStream_DataAvailable(object sender, WaveInEventArgs e)
@@ -377,6 +381,8 @@ namespace AudioHotkeySoundboard
                 soundHotkeys.RemoveAt(dgvKeySounds.SelectedRows[0].Index);
                 dgvKeySounds.Rows.Remove(dgvKeySounds.SelectedRows[0]);
             }
+
+            AutoSave();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -386,6 +392,8 @@ namespace AudioHotkeySoundboard
                 soundHotkeys.Clear();
                 dgvKeySounds.Rows.Clear();
             }
+
+            AutoSave();
         }
 
         private void btnPlaySound_Click(object sender, EventArgs e)
@@ -415,17 +423,22 @@ namespace AudioHotkeySoundboard
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        //private void btnSave_Click(object sender, EventArgs e)
+        //{
+        //    if (xmlLoc == "" || !File.Exists(xmlLoc))
+        //        xmlLoc = Helper.userGetXMLLoc();
+
+        //    if (xmlLoc != "")
+        //    {
+        //        XMLSettings.WriteXML(new XMLSettings.Settings() { SoundHotkeys = soundHotkeys.ToArray() }, xmlLoc);
+
+        //        MessageBox.Show("Saved");
+        //    }
+        //}
+
+        public void AutoSave()
         {
-            if (xmlLoc == "" || !File.Exists(xmlLoc))
-                xmlLoc = Helper.userGetXMLLoc();
-
-            if (xmlLoc != "")
-            {
-                XMLSettings.WriteXML(new XMLSettings.Settings() { SoundHotkeys = soundHotkeys.ToArray() }, xmlLoc);
-
-                MessageBox.Show("Saved");
-            }
+            XMLSettings.WriteXML(new XMLSettings.Settings() { SoundHotkeys = soundHotkeys.ToArray() }, Path.GetDirectoryName(Application.ExecutablePath) + "\\AHS-autosave.xml");
         }
 
         private void btnSaveAs_Click(object sender, EventArgs e)
@@ -439,8 +452,6 @@ namespace AudioHotkeySoundboard
             else if (last != xmlLoc)
             {
                 XMLSettings.WriteXML(new XMLSettings.Settings() { SoundHotkeys = soundHotkeys.ToArray() }, xmlLoc);
-
-                MessageBox.Show("Saved");
             }
         }
 
@@ -712,6 +723,8 @@ namespace AudioHotkeySoundboard
             });
 
             if (unsupported) MessageBox.Show("One or more files were of an unsupported file type.");
+
+            AutoSave();
         }
 
         private void TrackBar1_Scroll(object sender, EventArgs e)

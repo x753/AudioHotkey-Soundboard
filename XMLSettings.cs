@@ -139,12 +139,15 @@ namespace AudioHotkeySoundboard
 
         internal static void SaveSoundboardSettingsXML()
         {
-            WriteXML(soundboardSettings, Path.GetDirectoryName(Application.ExecutablePath) + "\\settings.xml");
+            WriteXML(soundboardSettings, Path.GetDirectoryName(Application.ExecutablePath) + "\\AHS-settings.xml");
         }
 
         internal static void LoadSoundboardSettingsXML()
         {
-            string filePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\settings.xml";
+            string filePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\AHS-settings.xml";
+            string oldFilePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\settings.xml";
+
+            if (!File.Exists(filePath)) { filePath = oldFilePath; } // try the old file path if the new one doesn't exist
 
             if (File.Exists(filePath))
             {

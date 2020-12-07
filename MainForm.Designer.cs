@@ -35,7 +35,6 @@ namespace AudioHotkeySoundboard
             this.label1 = new System.Windows.Forms.Label();
             this.cbPlaybackDevices = new System.Windows.Forms.ComboBox();
             this.mainTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnSave = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -100,18 +99,6 @@ namespace AudioHotkeySoundboard
             // 
             this.mainTimer.Interval = 50;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSave.Location = new System.Drawing.Point(163, 350);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(145, 23);
-            this.btnSave.TabIndex = 8;
-            this.btnSave.TabStop = false;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnRemove
             // 
@@ -188,7 +175,7 @@ namespace AudioHotkeySoundboard
             // btnSaveAs
             // 
             this.btnSaveAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSaveAs.Location = new System.Drawing.Point(315, 350);
+            this.btnSaveAs.Location = new System.Drawing.Point(163, 350);
             this.btnSaveAs.Name = "btnSaveAs";
             this.btnSaveAs.Size = new System.Drawing.Size(145, 23);
             this.btnSaveAs.TabIndex = 9;
@@ -444,7 +431,6 @@ namespace AudioHotkeySoundboard
             this.Controls.Add(this.btnSaveAs);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnAdd);
@@ -474,7 +460,6 @@ namespace AudioHotkeySoundboard
         private System.Windows.Forms.ComboBox cbPlaybackDevices;
         private System.Windows.Forms.ComboBox cbPlaybackDevices2;
         internal System.Windows.Forms.Timer mainTimer;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnAdd;
