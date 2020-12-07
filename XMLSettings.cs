@@ -11,7 +11,7 @@ namespace AudioHotkeySoundboard
 {
     public class XMLSettings
     {
-        readonly static SoundboardSettings DEFAULT_SOUNDBOARD_SETTINGS = new SoundboardSettings(new Keys[] { Keys.Pause }, new Keys[] { Keys.Oemtilde, Keys.LControlKey }, new LoadXMLFile[] { new LoadXMLFile(new Keys[] { }, "") }, false, true, "", "", "");
+        readonly static SoundboardSettings DEFAULT_SOUNDBOARD_SETTINGS = new SoundboardSettings(new Keys[] { Keys.Pause }, new Keys[] { Keys.Oemtilde, Keys.LControlKey }, new LoadXMLFile[] { new LoadXMLFile(new Keys[] { }, "") }, false, true, false, "", "", "");
 
         internal static SoundboardSettings soundboardSettings = new SoundboardSettings();
 
@@ -67,18 +67,22 @@ namespace AudioHotkeySoundboard
         {
             public Keys[] StopSoundKeys, PlaySelectionKeys;
             public LoadXMLFile[] LoadXMLFiles;
-            public bool MinimizeToTray, PlaySoundsOverEachOther;
+            public bool MinimizeToTray, PlaySoundsOverEachOther, RememberGainControl;
             public string LastPlaybackDevice, LastPlaybackDevice2, LastLoopbackDevice;
+
+            public bool GoEvenFurtherBeyond;
+            public int GainValue;
 
             public SoundboardSettings() { }
 
-            public SoundboardSettings(Keys[] stopSoundKeys, Keys[] playSelectionKeys, LoadXMLFile[] loadXMLFiles, bool minimizeToTray, bool playSoundsOverEachOther, string lastPlaybackDevice, string lastPlaybackDevice2, string lastLoopbackDevice)
+            public SoundboardSettings(Keys[] stopSoundKeys, Keys[] playSelectionKeys, LoadXMLFile[] loadXMLFiles, bool minimizeToTray, bool playSoundsOverEachOther, bool rememberGainControl, string lastPlaybackDevice, string lastPlaybackDevice2, string lastLoopbackDevice)
             {
                 StopSoundKeys = stopSoundKeys;
                 PlaySelectionKeys = playSelectionKeys;
                 LoadXMLFiles = loadXMLFiles;
                 MinimizeToTray = minimizeToTray;
                 PlaySoundsOverEachOther = playSoundsOverEachOther;
+                RememberGainControl = rememberGainControl;
                 LastPlaybackDevice = lastPlaybackDevice;
                 LastPlaybackDevice2 = lastPlaybackDevice2;
                 LastLoopbackDevice = lastLoopbackDevice;
@@ -171,6 +175,15 @@ namespace AudioHotkeySoundboard
                 if (settings.LastPlaybackDevice2 == null) settings.LastPlaybackDevice2 = "";
 
                 if (settings.LastLoopbackDevice == null) settings.LastLoopbackDevice = "";
+
+                if (settings.RememberGainControl)
+                {
+                    MainForm.Instance.SetGain(settings.GainValue);
+                    if (settings.GoEvenFurtherBeyond)
+                    {
+                        MainForm.Instance.GoEvenFurtherBeyond(true);
+                    }
+                }
 
                 soundboardSettings = settings;
             }

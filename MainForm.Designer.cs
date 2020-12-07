@@ -497,8 +497,8 @@ namespace AudioHotkeySoundboard
         private System.Windows.Forms.DataGridViewTextBoxColumn columnKeys;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label labelVolume;
-        private System.Windows.Forms.TrackBar trackbarVolume;
-        private System.Windows.Forms.CheckBox cbAudioOverdrive;
+        public System.Windows.Forms.TrackBar trackbarVolume;
+        public System.Windows.Forms.CheckBox cbAudioOverdrive;
         private ToolStripMenuItem memoryManagementToolStripMenuItem;
         private ToolTip ToolTip1;
         private ToolStripMenuItem downloadVBAudioCableToolStripMenuItem;

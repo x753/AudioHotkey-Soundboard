@@ -25,8 +25,12 @@ namespace AudioHotkeySoundboard
         internal List<XMLSettings.SoundHotkey> soundHotkeys = new List<XMLSettings.SoundHotkey>();
         internal string xmlLoc = "";
 
+        public static MainForm Instance;
+
         public MainForm()
         {
+            Instance = this;
+
             InitializeComponent();
 
             loadSoundDevices();
@@ -720,8 +724,27 @@ namespace AudioHotkeySoundboard
             {
                 labelVolume.Text = trackbarVolume.Value.ToString() + " dB";
             }
+            XMLSettings.soundboardSettings.GainValue = trackbarVolume.Value;
+            XMLSettings.SaveSoundboardSettingsXML();
         }
 
+        public void GoEvenFurtherBeyond(bool state)
+        {
+            cbAudioOverdrive.Checked = state;
+        }
+
+        public void SetGain(int gain)
+        {
+            trackbarVolume.Value = gain;
+            if (cbAudioOverdrive.Checked)
+            {
+                labelVolume.Text = (trackbarVolume.Value * 3).ToString() + " dB";
+            }
+            else
+            {
+                labelVolume.Text = trackbarVolume.Value.ToString() + " dB";
+            }
+        }
         public float GetGain()
         {
             if (cbAudioOverdrive.Checked)
@@ -744,6 +767,8 @@ namespace AudioHotkeySoundboard
             {
                 labelVolume.Text = trackbarVolume.Value.ToString() + " dB";
             }
+            XMLSettings.soundboardSettings.GoEvenFurtherBeyond = cbAudioOverdrive.Checked;
+            XMLSettings.SaveSoundboardSettingsXML();
         }
 
         public static System.Windows.Forms.Timer IdleTimer = new System.Windows.Forms.Timer();

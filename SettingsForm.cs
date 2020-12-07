@@ -39,8 +39,8 @@ namespace AudioHotkeySoundboard
             tbPlaySelectionKeys.Text = Helper.keysToString(XMLSettings.soundboardSettings.PlaySelectionKeys);
 
             cbMinimizeToTray.Checked = XMLSettings.soundboardSettings.MinimizeToTray;
-
             cbPlaySoundsOverEachOther.Checked = XMLSettings.soundboardSettings.PlaySoundsOverEachOther;
+            cbRememberGainControl.Checked = XMLSettings.soundboardSettings.RememberGainControl;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -99,6 +99,11 @@ namespace AudioHotkeySoundboard
                     XMLSettings.soundboardSettings.MinimizeToTray = cbMinimizeToTray.Checked;
 
                     XMLSettings.soundboardSettings.PlaySoundsOverEachOther = cbPlaySoundsOverEachOther.Checked;
+
+                    XMLSettings.soundboardSettings.RememberGainControl = cbRememberGainControl.Checked;
+
+                    XMLSettings.soundboardSettings.GainValue = MainForm.Instance.trackbarVolume.Value;
+                    XMLSettings.soundboardSettings.GoEvenFurtherBeyond = MainForm.Instance.cbAudioOverdrive.Checked;
 
                     XMLSettings.SaveSoundboardSettingsXML();
 

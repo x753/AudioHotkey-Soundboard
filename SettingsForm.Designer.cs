@@ -49,6 +49,7 @@
             this.tbPlaySelectionKeys = new System.Windows.Forms.TextBox();
             this.buttonClear2 = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.cbRememberGainControl = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSoundboardFiles)).BeginInit();
             this.SuspendLayout();
@@ -78,7 +79,7 @@
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(393, 347);
+            this.btnOK.Location = new System.Drawing.Point(393, 366);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 7;
@@ -90,7 +91,7 @@
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAdd.Location = new System.Drawing.Point(6, 201);
+            this.btnAdd.Location = new System.Drawing.Point(6, 209);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 2;
@@ -102,7 +103,7 @@
             // btnEdit
             // 
             this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Location = new System.Drawing.Point(87, 201);
+            this.btnEdit.Location = new System.Drawing.Point(87, 209);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
             this.btnEdit.TabIndex = 3;
@@ -114,7 +115,7 @@
             // btnRemove
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRemove.Location = new System.Drawing.Point(168, 201);
+            this.btnRemove.Location = new System.Drawing.Point(168, 209);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 4;
@@ -127,7 +128,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(474, 347);
+            this.btnCancel.Location = new System.Drawing.Point(474, 366);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 8;
@@ -151,7 +152,7 @@
             this.groupBox1.Controls.Add(this.btnEdit);
             this.groupBox1.Location = new System.Drawing.Point(12, 83);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(534, 230);
+            this.groupBox1.Size = new System.Drawing.Size(534, 238);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Switch between saves with keybinds";
@@ -178,7 +179,7 @@
             this.dgvSoundboardFiles.RowHeadersVisible = false;
             this.dgvSoundboardFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvSoundboardFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSoundboardFiles.Size = new System.Drawing.Size(522, 176);
+            this.dgvSoundboardFiles.Size = new System.Drawing.Size(522, 184);
             this.dgvSoundboardFiles.TabIndex = 19;
             this.dgvSoundboardFiles.TabStop = false;
             // 
@@ -198,7 +199,7 @@
             // 
             this.cbMinimizeToTray.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbMinimizeToTray.AutoSize = true;
-            this.cbMinimizeToTray.Location = new System.Drawing.Point(12, 323);
+            this.cbMinimizeToTray.Location = new System.Drawing.Point(12, 327);
             this.cbMinimizeToTray.Name = "cbMinimizeToTray";
             this.cbMinimizeToTray.Size = new System.Drawing.Size(216, 17);
             this.cbMinimizeToTray.TabIndex = 5;
@@ -210,7 +211,7 @@
             // 
             this.cbPlaySoundsOverEachOther.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbPlaySoundsOverEachOther.AutoSize = true;
-            this.cbPlaySoundsOverEachOther.Location = new System.Drawing.Point(12, 346);
+            this.cbPlaySoundsOverEachOther.Location = new System.Drawing.Point(12, 350);
             this.cbPlaySoundsOverEachOther.Name = "cbPlaySoundsOverEachOther";
             this.cbPlaySoundsOverEachOther.Size = new System.Drawing.Size(161, 17);
             this.cbPlaySoundsOverEachOther.TabIndex = 9;
@@ -268,12 +269,25 @@
             // 
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
+            // cbRememberGainControl
+            // 
+            this.cbRememberGainControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbRememberGainControl.AutoSize = true;
+            this.cbRememberGainControl.Location = new System.Drawing.Point(12, 373);
+            this.cbRememberGainControl.Name = "cbRememberGainControl";
+            this.cbRememberGainControl.Size = new System.Drawing.Size(164, 17);
+            this.cbRememberGainControl.TabIndex = 14;
+            this.cbRememberGainControl.TabStop = false;
+            this.cbRememberGainControl.Text = "Remember gain control value";
+            this.cbRememberGainControl.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(561, 382);
+            this.ClientSize = new System.Drawing.Size(561, 401);
+            this.Controls.Add(this.cbRememberGainControl);
             this.Controls.Add(this.buttonClear2);
             this.Controls.Add(this.tbPlaySelectionKeys);
             this.Controls.Add(this.label3);
@@ -317,5 +331,6 @@
         private System.Windows.Forms.TextBox tbPlaySelectionKeys;
         private System.Windows.Forms.Button buttonClear2;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.CheckBox cbRememberGainControl;
     }
 }
