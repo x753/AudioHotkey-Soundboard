@@ -1,6 +1,8 @@
 # AudioHotkey Soundboard
 Forked from [JNSoundboard](https://gitlab.com/Jitnaught/JNSoundboard).
 
+![Example Screenshot](screenshot.png)
+
 Features:
 * Can play MP3, WAV, WMA, M4A, and AC3 audio files
 * Play sounds through any sound device (speakers, virtual audio cable, etc.)
