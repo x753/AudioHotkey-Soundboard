@@ -139,6 +139,8 @@ namespace AudioHotkeySoundboard
 
         int lastAmountPressed = 0;
 
+        const string invalidKeys = " None Shift Control Alt Modifiers LButton RButton ";
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             int amountPressed = 0;
@@ -153,9 +155,13 @@ namespace AudioHotkeySoundboard
             {
                 var pressedKeys = new List<Keys>();
 
+                string lastKey = "None";
                 foreach (Keys key in Enum.GetValues(typeof(Keys)))
                 {
-                    if (Keyboard.IsKeyDown(key))
+                    if (key.ToString() == lastKey) { continue; }
+                    lastKey = key.ToString();
+
+                    if (Keyboard.IsKeyDown(key) && !invalidKeys.Contains(" " + key.ToString() + " "))
                     {
                         amountPressed++;
                         pressedKeys.Add(key);
@@ -201,9 +207,13 @@ namespace AudioHotkeySoundboard
             {
                 var pressedKeys = new List<Keys>();
 
+                string lastKey = "None";
                 foreach (Keys key in Enum.GetValues(typeof(Keys)))
                 {
-                    if (Keyboard.IsKeyDown(key))
+                    if (key.ToString() == lastKey) { continue; }
+                    lastKey = key.ToString();
+
+                    if (Keyboard.IsKeyDown(key) && !invalidKeys.Contains(" " + key.ToString() + " "))
                     {
                         amountPressed++;
                         pressedKeys.Add(key);

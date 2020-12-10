@@ -24,42 +24,44 @@ namespace AudioHotkeySoundboard
             else return "";
         }
 
-        internal static string[] keysArrayToStringArray(Keys[] keysArr)
-        {
-            var arr = new List<string>();
+        //internal static string[] keysArrayToStringArray(Keys[] keysArr)
+        //{
+        //    var arr = new List<string>();
 
-            for (int i = 0; i < keysArr.Length; i++)
-            {
-                arr.Add(keysArr[i].ToString());
-            }
+        //    for (int i = 0; i < keysArr.Length; i++)
+        //    {
+        //        arr.Add(keysArr[i].ToString());
+        //    }
 
-            return arr.ToArray();
-        }
+        //    return arr.ToArray();
+        //}
 
-        internal static Keys[] stringArrayToKeysArray(string[] strArr)
-        {
-            if (strArr == null) return new Keys[] { 0 };
-            var arr = new List<Keys>();
+        //internal static Keys[] stringArrayToKeysArray(string[] strArr)
+        //{
+        //    if (strArr == null) return new Keys[] { 0 };
+        //    var arr = new List<Keys>();
 
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                Keys key;
+        //    for (int i = 0; i < strArr.Length; i++)
+        //    {
+        //        Keys key;
 
-                if (Enum.TryParse(strArr[i], out key))
-                {
-                    arr.Add(key);
-                }
-                else
-                {
-                    return new Keys[] { 0 };
-                }
-            }
+        //        if (Enum.TryParse(strArr[i], out key))
+        //        {
+        //            arr.Add(key);
+        //        }
+        //        else
+        //        {
+        //            return new Keys[] { 0 };
+        //        }
+        //    }
 
-            return arr.ToArray();
-        }
+        //    return arr.ToArray();
+        //}
 
         internal static bool keysArrayFromString(string key, out Keys[] keysArr, out string errorMessage)
         {
+            Dictionary<string, string> stringToKeyTranslations = keyToStringTranslations.ToDictionary(x => x.Value, x => x.Key);
+
             if (key.Contains("+"))
             {
                 string[] sKeys = key.Split('+');
@@ -68,6 +70,11 @@ namespace AudioHotkeySoundboard
                 for (int i = 0; i < sKeys.Length; i++)
                 {
                     Keys kKey;
+
+                    if (stringToKeyTranslations.ContainsKey(sKeys[i]))
+                    {
+                        sKeys[i] = stringToKeyTranslations[sKeys[i]];
+                    }
 
                     if (Enum.TryParse(sKeys[i], out kKey))
                     {
@@ -89,6 +96,11 @@ namespace AudioHotkeySoundboard
             {
                 Keys kKey;
 
+                if (stringToKeyTranslations.ContainsKey(key))
+                {
+                    key = stringToKeyTranslations[key];
+                }
+
                 if (Enum.TryParse(key, out kKey))
                 {
                     keysArr = new Keys[] { kKey };
@@ -104,18 +116,48 @@ namespace AudioHotkeySoundboard
             }
         }
 
+        public static Dictionary<string, string> keyToStringTranslations = new Dictionary<string, string>(){
+            {"Oemcomma", "Comma"},
+            {"OemPeriod", "Period"},
+            {"OemQuestion", "ForwardSlash"},
+            {"OemOpenBrackets", "LeftBracket"},
+            {"Oem6", "RightBracket"},
+            {"Oem5", "BackSlash"},
+            {"Oemplus", "Plus"},
+            {"OemMinus", "Minus"},
+            {"Back", "Backspace"},
+            {"Oemtilde", "Backtick"},
+            {"D0", "0"},
+            {"D1", "1"},
+            {"D2", "2"},
+            {"D3", "3"},
+            {"D4", "4"},
+            {"D5", "5"},
+            {"D6", "6"},
+            {"D7", "7"},
+            {"D8", "8"},
+            {"D9", "9"},
+            {"Oem1", "Semicolon"},
+            {"Oem7", "Quotation"}
+        };
         internal static string keysToString(params Keys[] keysArr)
         {
             if (keysArr == null) return "";
-            string temp = "";
+            string result = "";
             int kLen = keysArr.Length;
 
             for (int i = 0; i < kLen; i++)
             {
-                temp += keysArr[i].ToString() + (i == kLen - 1 ? "" : "+");
+                string next = keysArr[i].ToString();
+                if (keyToStringTranslations.ContainsKey(next))
+                {
+                    next = keyToStringTranslations[next];
+                }
+
+                result += next + (i == kLen - 1 ? "" : "+");
             }
 
-            return temp;
+            return result;
         }
 
         internal static bool soundLocsArrayFromString(string soundLocsStr, out string[] soundLocs, out string errorMessage)
