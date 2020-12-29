@@ -26,8 +26,7 @@ namespace AudioHotkeySoundboard
       Application.SetCompatibleTextRenderingDefault(false);
 
       // Load NAudio from embedded resources
-      AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
-      {
+      AppDomain.CurrentDomain.AssemblyResolve += (sender, args) => {
         string resourceName = new AssemblyName(args.Name).Name + ".dll";
         string resource = Array.Find(typeof(MainForm).Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
 
